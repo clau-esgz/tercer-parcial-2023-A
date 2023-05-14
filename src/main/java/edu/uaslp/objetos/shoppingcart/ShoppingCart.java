@@ -4,46 +4,60 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class ShoppingCart {
-    private ShoppingItemCatalog ShoppingItemCatalog;
-    private LinkedList<ShoppingItem> itemList;
-    private int TotalCostInCents;
-    private int DistinctItemsCount;
-    private int TotalItemsCount;
-    public int getTotalCostInCents() {
-        return TotalCostInCents;
-    }
+    List<ShoppingItem> items = new LinkedList<>();
+    private final ShoppingItemCatalog ShoppingItemCatalog;
+
 
     public ShoppingCart(ShoppingItemCatalog shoppingItemCatalog) {
         this.ShoppingItemCatalog = shoppingItemCatalog;
-        itemList = new LinkedList<>();
-        TotalCostInCents = 0;
-        DistinctItemsCount = 0;
-        TotalItemsCount = 0;
     }
 
     public void add(String code) {
-        ShoppingItem item = ShoppingItemCatalog.getItem(code);
-        itemList.add(item);
-        TotalCostInCents += item.getUnitCostInCents();
-        TotalItemsCount++;
-        DistinctItemsCount++;
+        items.add(ShoppingItemCatalog.getItem(code));
     }
 
+    public int getTotalCostInCents() {
+        int totalCost = 0;
+        for(ShoppingItem item: items){
+            totalCost += item.getUnitCostInCents();
+        }
+        return totalCost;
+    }
+
+
+
+
     public int getDistinctItemsCount() {
-        return DistinctItemsCount;
+        Collection<ShoppingItem> distinctItems = getDistinctItems();
+
+        return distinctItems.size();
+    }
+    private boolean itemIsPresent(ShoppingItem itemToFind, Collection<ShoppingItem> distinctItems){
+        for(ShoppingItem item : distinctItems){
+            if(itemToFind.getCode().equals(item.getCode())){
+                return true;
+            }
+        }
+        return false;
     }
 
     public int getTotalItemsCount() {
-        return TotalItemsCount;
+        return items.size();
     }
 
     public List<ShoppingItem> getItems() {
-        return itemList;
+        return items;
     }
 
     public Collection<ShoppingItem> getDistinctItems() {
-        return null;
-    }
+        Collection<ShoppingItem> distinctItems = new LinkedList<>();
+        for (ShoppingItem item: items){
+            if (!itemIsPresent(item,distinctItems)){
+                distinctItems.add(item);
+            }
 
+        }
+        return distinctItems;
+    }
 
 }

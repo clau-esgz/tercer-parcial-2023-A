@@ -1,5 +1,7 @@
 package edu.uaslp.objetos.shoppingcart;
 
+import java.util.Objects;
+
 public final class ShoppingItem {
 
     private final String name;
@@ -32,6 +34,16 @@ public final class ShoppingItem {
 
     public double getUnitCostInPesos() {
         return unitCostInCents / 100.0;
+    }
+
+    public boolean equals (Object o){
+        if(this == o) return true;
+        if ( o == null || getClass() != o.getClass()) return false;
+        ShoppingItem that = (ShoppingItem) o;
+        if (unitCostInCents != that.unitCostInCents) return false;
+        if(!Objects.equals(name,that.name)) return false;
+        if(!Objects.equals(description,that.description)) return false;
+        return Objects.equals(code,that.code);
     }
 
 }
